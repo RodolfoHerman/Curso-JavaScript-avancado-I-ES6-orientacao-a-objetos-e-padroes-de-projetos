@@ -11,7 +11,8 @@
     
     <h1 class="text-center">Negociações</h1>
     
-    <form class="form">
+    <!-- <form class="form" onsubmit="negociacaoController.adiciona(event, this)"> -->
+    <form class="form" onsubmit="negociacaoController.adiciona(event)">
         
         <div class="form-group">
             <label for="data">Data</label>
@@ -59,20 +60,61 @@
         </tfoot>
     </table>
     <!-- <script src="js/index.js"></script> -->
-    <script src="js/app/models/negociacao.js"></script>
+    <script src="js/app/models/Negociacao.js"></script>
+    <script src="js/app/controllers/NegociacaoController.js"></script>
+    <!-- <script src="js/app/models/Aluno.js"></script>
+    <script src="js/app/models/Prova.js"></script> -->
     <script>
         //usamos let para variaveis ficarem dentro de seu escopo e não vazarem para fora do bloco de sua declaração
 
-        let hoje = new Date();
+        // let hoje = new Date();
 
-        let n1 = new Negociacao(hoje, 5, 700);
+        // let n1 = new Negociacao(hoje, 5, 700);
 
-        console.log(n1.data);
+        // console.log(n1.data);
 
-        hoje.setDate(11);
+        // hoje.setDate(11);
 
-        console.log(n1.data);
-    
+        // console.log(n1.data);
+
+        let negociacaoController = new NegociacaoController();
+
+        // let dataString = '18-02-2018';
+        //Utlizando o reverse em um array para mudar a ordem dos elementos
+        // let data = new Date(dataString.split('-').reverse().join('/'));
+
+        // console.log(data);
+
+        //Utilizando o SPREAD para adicionar novos elementos em outro array
+        // let lista1 = ['banana', 'laranja', 'mamão'];
+        // let lista2 = ['caju', 'tangerina', 'abacaxi'];
+
+        // lista1.push(...lista2);
+
+        // console.log(lista1);
+        
+        // let avaliacoes = [
+        //     new Prova(new Aluno(1, 'Lucas'), 9),
+        //     new Prova(new Aluno(2, 'Rafael'),5),
+        //     new Prova(new Aluno(3, 'Miriam'),8),
+        //     new Prova(new Aluno(4, 'Aline'),6),
+        // ];
+
+        //Quando a arrow function possui apenas um parametro podemos remover os parenteses
+        // let aprovados = avaliacoes
+        //     .filter(objeto => objeto.nota >= 7)
+        //     .map(objeto => objeto.aluno.nome);
+
+        // let aprovados = avaliacoes
+        //     .filter((objeto) => objeto.nota >= 7)
+        //     .map((objeto) => objeto.aluno.nome);
+
+        // let aprovados = avaliacoes
+        //     .filter(function(prova) {return prova.nota >= 7;})
+        //     .map(function(prova){return prova.aluno.nome});
+
+        // console.log(aprovados);
+
     </script>
 </body>
 </html>
