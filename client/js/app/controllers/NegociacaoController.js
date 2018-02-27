@@ -13,6 +13,9 @@ class NegociacaoController {
         this._inputValor = $('#valor');
 
         this._listaNegociacoes = new ListaNegociacoes();
+        this._negociacoesView = new NegociacoesView($('#negociacoesView'));
+
+        this._negociacoesView.update(this._listaNegociacoes);
     }
 
     // adiciona(event, form) {
@@ -38,7 +41,9 @@ class NegociacaoController {
         // );
 
         this._listaNegociacoes.adiciona(this._criaNegociacao());
-        //Burlando o encapsulamento
+        this._negociacoesView.update(this._listaNegociacoes);
+
+        //Burlando o encapsulamento quando não há programação defensiva
         this._listaNegociacoes.negociacoes.push(this._criaNegociacao());
 
         console.log(this._listaNegociacoes);
