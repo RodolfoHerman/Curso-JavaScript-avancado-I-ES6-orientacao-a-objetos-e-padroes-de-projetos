@@ -27,7 +27,7 @@ class DateHelper {
     static dataParaTexto(data) {
 
         //Utilização do TEMPLATE STRING (ES2015)
-        return `${data.getDate()}/${data.getMonth()}/${data.getFullYear()}`;
+        return `${data.getDate()}/${data.getMonth() + 1}/${data.getFullYear()}`;
 
         // return data.getDate() 
         //     + "/" + (data.getMonth() + 1)
