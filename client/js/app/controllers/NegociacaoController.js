@@ -12,7 +12,18 @@ class NegociacaoController {
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
 
-        this._listaNegociacoes = new ListaNegociacoes();
+        //Não faz mal declarar negociacoesView apos essa assinatura de metodo, pois
+        //quando este metodo for chamado em ListaNegociacoes já terá a instancia
+        //de negociacoesView criada
+        // this._listaNegociacoes = new ListaNegociacoes(this, function(model) {//É passado o contexto do NegociacaoController como parâmetro
+        //     //console.log(model);
+        //     this._negociacoesView.update(model);
+        // });
+
+        //O contexto de uma arrow function é léxico e não é dinâmico como a função padrão acima.
+        //Sendo assim, não precisamos passar o contexto do NegociacaoController pois a arraow function já entende isso
+        this._listaNegociacoes = new ListaNegociacoes(model => this._negociacoesView.update(model));
+
         this._negociacoesView = new NegociacoesView($('#negociacoesView'));
 
         this._negociacoesView.update(this._listaNegociacoes);
@@ -20,6 +31,15 @@ class NegociacaoController {
         this._mensagem = new Mensagem('');
 
         this._mensagemView = new MensagemView($('#mensagemView'));
+        this._mensagemView.update(this._mensagem);
+    }
+
+    apaga() {
+
+        this._listaNegociacoes.esvazia();
+        //this._negociacoesView.update(this._listaNegociacoes);
+
+        this._mensagem.texto = "Negociações apagadas com sucesso";
         this._mensagemView.update(this._mensagem);
     }
 
@@ -46,7 +66,7 @@ class NegociacaoController {
         // );
 
         this._listaNegociacoes.adiciona(this._criaNegociacao());
-        this._negociacoesView.update(this._listaNegociacoes);
+        //this._negociacoesView.update(this._listaNegociacoes);
 
         //Burlando o encapsulamento quando não há programação defensiva
         //this._listaNegociacoes.negociacoes.push(this._criaNegociacao());
