@@ -41,7 +41,7 @@
         <button onclick="negociacaoController.apaga()" class="btn btn-primary text-center" type="button">
             Apagar
         </button>
-    </div> 
+    </div>
     <br>
     <br>
     
@@ -59,6 +59,80 @@
     <!-- <script src="js/app/models/Aluno.js"></script>
     <script src="js/app/models/Prova.js"></script> -->
     <script>
+        
+        //Executar um código quando ocorre a leitura da propriedade do objeto utilizando o Proxy.
+        //O segundo parâmetro do proxy é o handler (aonde vai a armadilha)
+        // let  negociacao = new Proxy(new Negociacao(new Date(), 1, 100) ,{
+        //     //utilizando o handler de get para leitura
+        //     //target é o objeto negociacao, "prop" é a propriedade (atributo) lido e receiver é a instância do Proxy
+        //     get: function(target, prop, receiver) {
+        //         console.log(`A propriedade "${prop}" foi interceptada`);
+        //         É importante ressaltar que o "Reflect.get()" que efetivamente realiza a operação no objeto real
+        //         return Reflect.get(target, prop, receiver);
+        //     }
+        // });
+
+        // console.log(negociacao.quantidade);
+        // console.log(negociacao.valor);
+
+        //Executar um código quando ocorre a escrita na propriedade do objeto utilizando o Proxy.
+        //A intenção aqui é realizar alguma modificação na VIEW quando houver alguma mudança nas propriedades
+        // let negociacao = new Proxy(new Negociacao(new Date(), 1, 100),{
+
+        //     set: function(target, prop, value, receiver) {
+        //         console.log(`O valor anterior é "${target[prop]}" o novo valor é "${value}"`);
+        //         return Reflect.set(target, prop, value, receiver);
+        //     }
+
+        // });
+
+        //Como no objeto Negicacao exites apenas os getters será atribuido o valor diretamente no atributo privado
+        // negociacao._quantidade = 10;
+        // negociacao._valor = 200;
+
+        //Utilizar o Proxy para atualizar a VIEW em ListaNegociacoes.js
+        // let lista = new Proxy(new ListaNegociacoes(), {
+
+        //     set: function(target, prop, value, receiver) {
+        //         console.log(`O valor anterior é "${target[prop]}" o novo valor é "${value}"`);
+        //         return Reflect.set(target, prop, value, receiver);
+        //     }
+
+        // });
+
+        // lista.adiciona(new Negociacao(new Date(), 1, 100));
+
+        //Forçando o método GET do Proxy para realizar um SET e atualizar a VIEW, pois o SET só funcionará se houver
+        //mudança na propriedade do atributo do objeto. O método 'adiciona' possui um PUSH que realiza uma mudança
+        //interna do array e não altera o array em si.
+        //Aqui o GET realiza uma chamada de leitura e depois realiza o apply.
+        // let lista = new Proxy(new ListaNegociacoes(), {
+
+        //     get: function(target, prop, receiver) {
+
+        //         if(['adiciona', 'esvazia'].includes(prop) && typeof(target[prop]) == typeof(Function)) {
+
+        //             //Aqui será realizada a sbustituição do método 'adiciona' ou 'esvazia' por esta function.
+        //             //A jogada aqui é que o método substituído é do Proxy e não do objeto original.
+        //             //Usamos o Reflect.apply para executar a função 'target[prop]' do objeto original 'target' passando
+        //             //os parâmetros 'lista.adiciona(new Negociacao(new Date(), 1, 100))' na variável implícita 'arguments'.
+        //             //Além disso não pode ser usado a arrow function pois o contexto tem que ser dinâmico e não léxico
+        //             return function() {
+
+        //                 console.log(`Foi interceptado "${target[prop]}"`);
+        //                 Reflect.apply(target[prop], target, arguments);
+        //             }
+
+        //         }
+
+        //         return Reflect.get(target, prop, receiver);
+        //     }
+
+        // });
+        
+        // lista.adiciona(new Negociacao(new Date(), 1, 100));
+        // lista.esvazia();
+
         //usamos let para variaveis ficarem dentro de seu escopo e não vazarem para fora do bloco de sua declaração
 
         // let hoje = new Date();

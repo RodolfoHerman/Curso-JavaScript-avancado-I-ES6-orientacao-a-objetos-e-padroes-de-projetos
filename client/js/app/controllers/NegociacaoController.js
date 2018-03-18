@@ -12,6 +12,9 @@ class NegociacaoController {
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
 
+        //Necessário criar uma variável para receber o 'this' do contexto do NegociacaoController 
+        let self = this;
+
         //Não faz mal declarar negociacoesView apos essa assinatura de metodo, pois
         //quando este metodo for chamado em ListaNegociacoes já terá a instancia
         //de negociacoesView criada
@@ -22,7 +25,28 @@ class NegociacaoController {
 
         //O contexto de uma arrow function é léxico e não é dinâmico como a função padrão acima.
         //Sendo assim, não precisamos passar o contexto do NegociacaoController pois a arraow function já entende isso
-        this._listaNegociacoes = new ListaNegociacoes(model => this._negociacoesView.update(model));
+        // this._listaNegociacoes = new ListaNegociacoes(model => this._negociacoesView.update(model));
+
+        //Utilização do Proxy para não sujar o MODEL
+        this._listaNegociacoes = new Proxy(new ListaNegociacoes(), {
+
+            get: function(target, prop, receiver) {
+
+                if(['adiciona','esvazia'].includes(prop) && typeof(target[prop]) == typeof(Function)) {
+
+                    return function() {
+
+                        console.log(`Foi interceptado "${prop}"`);
+                        let retorno = Reflect.apply(target[prop], target, arguments);
+                        self._negociacoesView.update(target);
+                        //return retorno;
+                    }
+                }
+
+                return Reflect.get(target, prop, receiver);
+            }
+
+        });
 
         this._negociacoesView = new NegociacoesView($('#negociacoesView'));
 

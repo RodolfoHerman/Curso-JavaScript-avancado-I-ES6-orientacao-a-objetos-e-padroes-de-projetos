@@ -1,17 +1,26 @@
 class ListaNegociacoes {
 
     //constructor(contexto, armadilha) {
-    constructor(armadilha) {
+    //constructor(armadilha) {
+    constructor(){
 
         this._negociacoes = [];
-        this._armadilha = armadilha;
+        //Retirar a armadilha para utilizar o Proxy
+        //this._armadilha = armadilha;
        // this._contexto = contexto;
     }
 
     adiciona(negociacao) {
 
+        //Gambiarra para utilizar o SET do proxy e atualizar a VIEW.
+        //Não será utilizado porque possue problemas de performace, pois se for atribuído
+        //mais 200 negociações toda vez será criado um novo array e reatribuído tudo de novo
+        //this._negociacoes = [].concat(this._negociacoes, negociacao);
+
         this._negociacoes.push(negociacao);
-        this._armadilha(this);
+        
+        //Retirar a armadilha para utilizar o Proxy
+        //this._armadilha(this);
         //O parâmetro do Reflect é o contexto de NegociacaoController. O último parâmetro são os parâmetros
         //(em forma de array) que o método _armadilha recebe
         //Reflect.apply(this._armadilha, this._contexto, [this]);
@@ -28,7 +37,8 @@ class ListaNegociacoes {
     esvazia() {
         
         this._negociacoes = [];
-        this._armadilha(this);
+        //Retirar a armadilha para utilizar o Proxy
+        //this._armadilha(this);
         //O parâmetro do Reflect é o contexto de NegociacaoController. O último parâmetro são os parâmetros
         //(em forma de array) que o método _armadilha recebe
         //Reflect.apply(this._armadilha, this._contexto, [this]);
