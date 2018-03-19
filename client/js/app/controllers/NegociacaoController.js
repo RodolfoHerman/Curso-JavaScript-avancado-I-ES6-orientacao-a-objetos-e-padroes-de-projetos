@@ -13,7 +13,7 @@ class NegociacaoController {
         this._inputValor = $('#valor');
 
         //Necessário criar uma variável para receber o 'this' do contexto do NegociacaoController 
-        let self = this;
+        //let self = this;
 
         //Não faz mal declarar negociacoesView apos essa assinatura de metodo, pois
         //quando este metodo for chamado em ListaNegociacoes já terá a instancia
@@ -27,35 +27,67 @@ class NegociacaoController {
         //Sendo assim, não precisamos passar o contexto do NegociacaoController pois a arraow function já entende isso
         // this._listaNegociacoes = new ListaNegociacoes(model => this._negociacoesView.update(model));
 
+        //utilizando o ProxyFactory. Utilização do BIND para tirar essa reponsabilidade do controller
+        // this._listaNegociacoes = ProxyFactory.create(
+        //     new ListaNegociacoes(), 
+        //     ['adiciona', 'esvazia'],
+        //     //Aqui a arrow function possui escopo léxico, sendo assim, não precisa do 'self' pois esta entende que pertence
+        //     //a classe 'NegociacaoController'
+        //     model => this._negociacoesView.update(model));
+
+
         //Utilização do Proxy para não sujar o MODEL
-        this._listaNegociacoes = new Proxy(new ListaNegociacoes(), {
+        // this._listaNegociacoes = new Proxy(new ListaNegociacoes(), {
 
-            get: function(target, prop, receiver) {
+        //     get: function(target, prop, receiver) {
 
-                if(['adiciona','esvazia'].includes(prop) && typeof(target[prop]) == typeof(Function)) {
+        //         if(['adiciona','esvazia'].includes(prop) && typeof(target[prop]) == typeof(Function)) {
 
-                    return function() {
+        //             return function() {
 
-                        console.log(`Foi interceptado "${prop}"`);
-                        let retorno = Reflect.apply(target[prop], target, arguments);
-                        self._negociacoesView.update(target);
-                        //return retorno;
-                    }
-                }
+        //                 console.log(`Foi interceptado "${prop}"`);
+        //                 let retorno = Reflect.apply(target[prop], target, arguments);
+        //                 self._negociacoesView.update(target);
+        //                 //return retorno;
+        //             }
+        //         }
 
-                return Reflect.get(target, prop, receiver);
-            }
+        //         return Reflect.get(target, prop, receiver);
+        //     }
 
-        });
+        // });
 
-        this._negociacoesView = new NegociacoesView($('#negociacoesView'));
+        //Não utilizamos a varável this._negociacoesView, por isso pode ser criada diretamente  na instância do BIND
+        //this._negociacoesView = new NegociacoesView($('#negociacoesView'));
 
-        this._negociacoesView.update(this._listaNegociacoes);
+        //Realização do BIND
+        this._listaNegociacoes = new Bind(
+            new ListaNegociacoes(), 
+            new NegociacoesView($('#negociacoesView')), 
+            'adiciona', 'esvazia');
 
-        this._mensagem = new Mensagem('');
+        //O 'BIND' faz o update
+        //this._negociacoesView.update(this._listaNegociacoes);
 
-        this._mensagemView = new MensagemView($('#mensagemView'));
-        this._mensagemView.update(this._mensagem);
+        //this._mensagem = new Mensagem();
+
+        //utilizando o ProxyFactory. Utilização do BIND para tirar essa reponsabilidade do controller
+        // this._mensagem = ProxyFactory.create(
+        //     new Mensagem(),
+        //     ['texto'],
+        //     model => this._mensagemView.update(model));
+
+        //Não utilizamos a varável this._mensagemView, por isso pode ser criada diretamente  na instância do BIND
+        //this._mensagemView = new MensagemView($('#mensagemView'));
+        
+        //Realização do BIND
+        this._mensagem = new Bind(
+            new Mensagem(), 
+            new MensagemView($('#mensagemView')), 
+            'texto');
+
+        //O 'BIND' faz o update
+        //this._mensagemView.update(this._mensagem);
     }
 
     apaga() {
@@ -64,7 +96,8 @@ class NegociacaoController {
         //this._negociacoesView.update(this._listaNegociacoes);
 
         this._mensagem.texto = "Negociações apagadas com sucesso";
-        this._mensagemView.update(this._mensagem);
+        //Devido ao 'ProxyFactory' ele é uma armadilha e não precisa mais de update aqui (quando faz alterações na VIEW)
+        //this._mensagemView.update(this._mensagem);
     }
 
     // adiciona(event, form) {
@@ -96,9 +129,10 @@ class NegociacaoController {
         //this._listaNegociacoes.negociacoes.push(this._criaNegociacao());
 
         this._mensagem.texto = "Negociação adicionada com sucesso !!";
-        this._mensagemView.update(this._mensagem);
+        //Devido ao 'ProxyFactory' ele é uma armadilha e não precisa mais de update aqui (quando faz alterações na VIEW)
+        //this._mensagemView.update(this._mensagem);
 
-        console.log(this._listaNegociacoes);
+        //console.log(this._listaNegociacoes);
         // console.log(DateHelper.dataParaTexto(negociacao.data));
         
         this._limpaFormulario();
