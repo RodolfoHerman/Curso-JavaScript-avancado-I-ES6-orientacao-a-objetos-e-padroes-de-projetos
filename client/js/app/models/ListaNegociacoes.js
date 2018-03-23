@@ -47,6 +47,10 @@ class ListaNegociacoes {
         //this._armadilha.apply(this._contexto, [this]);
     }
 
+    get volumeTotal() {
+        return this._negociacoes.reduce((total, n) => total + n.volume, 0,0);
+    }
+
     // A função concat aceita receber um número infinito de parâmetros, inclusive aqueles que não são um array
     // let listaDeNomes1 = ['Flávio', 'Rogers', 'Júlia'];
     // let listaDeNomes2 = ['Vieira', 'Fernanda', 'Gerson'];

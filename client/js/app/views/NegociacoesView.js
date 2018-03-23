@@ -65,7 +65,15 @@ class NegociacoesView extends View {
                             //Melhorando ainda mais a função reduce() utilizando arrow function
                             //Como a função retornará um único valor, não foi necessário utilizar a IIFE
                             //para incluirmos várias instruções dentro do foreach
-                            model.negociacoes.reduce((total, n) => total + n.volume, 0.0)
+                            //model.negociacoes.reduce((total, n) => total + n.volume, 0.0)
+
+                            //Nesse ponto, iteramos sobre a lista de negociações do modelo 
+                            //ListaNegociacoes aplicando a função reduce para calcular o volume total. 
+                            //Esta é uma solução procedural onde temos o dado ListaNegociacoes de 
+                            //um lado e o comportamento que calcula o volume total do outro, ou seja, 
+                            //em NegociacoesView. Uma solução mais orientada a objetos é criarmos 
+                            //um getter chamado volumeTotal em ListaNegociacoes
+                            model.volumeTotal
                         }
                     </td>
                 </tfoot>

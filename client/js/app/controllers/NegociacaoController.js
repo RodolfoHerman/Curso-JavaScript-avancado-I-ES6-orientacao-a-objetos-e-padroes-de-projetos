@@ -100,6 +100,68 @@ class NegociacaoController {
         //this._mensagemView.update(this._mensagem);
     }
 
+    //Isolando responsabilidade de buscar dados do servidor
+    importaNegociacoes() {
+
+        let service = new NegociacaoService();
+
+        //Utilizando a estratégia do Error-First (primeiro parâmetro é o erro)
+        service.obterNegociacoesDaSemana((erro, negociacoes) => {
+
+            if(erro) {
+
+                this._mensagem.texto = erro;
+                return;
+            }
+
+            negociacoes.forEach(negociacao => {
+
+                this._listaNegociacoes.adiciona(negociacao);
+                this._mensagem.texto = 'Negociações importadas com sucesso';
+            });
+
+        });
+    }    
+
+    // importaNegociacoes() {
+
+    //     let xhr = new XMLHttpRequest();
+        
+    //     xhr.open('GET', 'negociacoes/semana');
+        
+    //     xhr.onreadystatechange = () => {
+            
+    //         // Os estados possíveis de um requisição AJAX
+
+    //         // 0: requisição ainda não iniciada
+    //         // 1: conexão com o servidor estabelecida
+    //         // 2: requisição recebida
+    //         // 3: processando requisição
+    //         // 4: requisição está concluída e a resposta está pronta
+
+    //         //Se o status for igual a 4 buscamos o dados do servidor
+    //         if(xhr.readyState == 4) {
+
+    //             //Se temos certaza de qu os os dados chegaram se o status for igual a 200
+    //             if(xhr.status == 200) {
+
+    //                 JSON.parse(xhr.responseText)
+    //                     .map(objeto => new Negociacao(new Date(objeto.data), objeto.valor, objeto.quantidade))
+    //                     .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+
+    //                 this._mensagem.texto = 'Negociação adicionada com sucesso! ';
+
+    //             } else {
+
+    //                 console.log(xhr.responseText);
+    //                 this._mensagem.texto = "Não foi possível obter as negociçoes";
+    //             }
+    //         }
+    //     };
+
+    //     xhr.send();
+    // }
+
     // adiciona(event, form) {
     adiciona(event) {
 
