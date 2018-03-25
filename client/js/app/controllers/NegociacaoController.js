@@ -103,9 +103,81 @@ class NegociacaoController {
     //Isolando responsabilidade de buscar dados do servidor
     importaNegociacoes() {
 
-        let service = new NegociacaoService();
+        //O Promise é assincrono, então a ordem de execução dos métodos se perdem.
+        //Para contornar este problema é utilizado o Promise.all() que recebe como parâmetro
+        //uma lista de promises e a execução é realizada na ordem em que foram colocados,
+        //além disso, os erros dos métodos são tratados em apenas um lugar, no 'catch'
+        let service = new NegociacaoServicePromise();
+        
+        service.obterNegociacoes()
+            .then(negociacoes => {
 
-        //Utilizando a estratégia do Error-First (primeiro parâmetro é o erro)
+                negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+
+                this._mensagem.texto = 'Negociações importadas com sucesso!';
+            })
+            .catch(erro => this._mensagem.texto = erro);
+
+        //Removendo a responsabilidade da classe em tratar o Promisse.all e passando para a classe de serviço
+        // Promise
+        //     .all([service.obterNegociacoesDaSemana(), 
+        //             service.obterNegociacoesDaSemanaAnterior(), 
+        //             service.obterNegociacoesDaSemanaRetrasada()])
+        //     .then(negociacoes => {
+        //         negociacoes
+        //             //Negociacoes é um array de 2 dimensões. Para transforma-lo em um array
+        //             //de uma dimensão pode-se usar o método reduce. Depois um forEach para adicionar
+        //             //as negociacoes
+        //             .reduce((compacto, array) => compacto.concat(array), [])
+        //             .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+
+        //             this._mensagem.texto = 'Negociações importadas com sucesso!';
+        //     })
+        //     .catch(erro => this._mensagem.texto = erro);
+        
+
+
+        //Utilizaçaõ do padrão de projeto Promise do ES6.
+        //Para o ES5 utilizar o CALLBACK
+        // let service = new NegociacaoServicePromise();
+
+        // service.obterNegociacoesDaSemana()
+        //     .then(negociacoes => {
+        //         negociacoes.forEach(negociacao => {
+                    
+        //             this._listaNegociacoes.adiciona(negociacao);
+        //         });
+
+        //         this._mensagem.texto = 'Negociações importadas com sucesso!';
+        //     })
+        //     .catch(erro => this._mensagem.texto = erro);
+
+        // service.obterNegociacoesDaSemanaAnterior()
+        // .then(negociacoes => {
+        //     negociacoes.forEach(negociacao => {
+                
+        //         this._listaNegociacoes.adiciona(negociacao);
+        //     });
+
+        //     this._mensagem.texto = 'Negociações importadas com sucesso!';
+        // })
+        // .catch(erro => this._mensagem.texto = erro);            
+
+        // service.obterNegociacoesDaSemanaRetrasada()
+        // .then(negociacoes => {
+        //     negociacoes.forEach(negociacao => {
+                
+        //         this._listaNegociacoes.adiciona(negociacao);
+        //     });
+
+        //     this._mensagem.texto = 'Negociações importadas com sucesso!';
+        // })
+        // .catch(erro => this._mensagem.texto = erro);
+
+
+        //let service = new NegociacaoServicePro();
+
+        /*//Utilizando a estratégia do Error-First (primeiro parâmetro é o erro)
         service.obterNegociacoesDaSemana((erro, negociacoes) => {
 
             if(erro) {
@@ -117,10 +189,45 @@ class NegociacaoController {
             negociacoes.forEach(negociacao => {
 
                 this._listaNegociacoes.adiciona(negociacao);
-                this._mensagem.texto = 'Negociações importadas com sucesso';
             });
 
-        });
+
+            //Aqui iriam vir as chamadas dos métodos 'obterNegociacoesDaSemanaAnterior' e 'obterNegociacoesDaSemanaRetrasada'
+            //de forma aninhado pois são requisições assincronas, matendo então a ordem de obtençao dos dados.
+            //O problema de ficar chamando esses métodos dentro de métodos (para fuções assincronas) é chamado de
+            //Callback Hell: 'Ocorre quando temos requisições assíncronas executadas em determinada ordem, que chama vários callbacks seguidos.'
+            //A estrutura de código fica parecendo uma pirâmide e é chamada de Pyramid of Doom.
+            service.obterNegociacoesDaSemanaAnterior((erro, negociacoes) => {
+
+                if(erro) {
+    
+                    this._mensagem.texto = erro;
+                    return;
+                }
+    
+                negociacoes.forEach(negociacao => {
+    
+                    this._listaNegociacoes.adiciona(negociacao);
+                });
+
+                service.obterNegociacoesDaSemanaRetrasada((erro, negociacoes) => {
+
+                    if(erro) {
+        
+                        this._mensagem.texto = erro;
+                        return;
+                    }
+        
+                    negociacoes.forEach(negociacao => {
+        
+                        this._listaNegociacoes.adiciona(negociacao);
+                    });
+
+                    this._mensagem.texto = 'Negociações importadas com sucesso';
+        
+                });
+            });           
+        });*/
     }    
 
     // importaNegociacoes() {
