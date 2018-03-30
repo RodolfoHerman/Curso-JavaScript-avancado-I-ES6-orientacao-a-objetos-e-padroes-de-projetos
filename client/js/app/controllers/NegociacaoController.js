@@ -11,6 +11,8 @@ class NegociacaoController {
         this._inputData = $('#data');
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
+        //Para realizar a ordenação inversa
+        this._ordemAtual = "";
 
         //Necessário criar uma variável para receber o 'this' do contexto do NegociacaoController 
         //let self = this;
@@ -64,7 +66,7 @@ class NegociacaoController {
         this._listaNegociacoes = new Bind(
             new ListaNegociacoes(), 
             new NegociacoesView($('#negociacoesView')), 
-            'adiciona', 'esvazia');
+            'adiciona', 'esvazia', 'ordena', 'inverterOrdem');
 
         //O 'BIND' faz o update
         //this._negociacoesView.update(this._listaNegociacoes);
@@ -89,6 +91,23 @@ class NegociacaoController {
         //O 'BIND' faz o update
         //this._mensagemView.update(this._mensagem);
     }
+
+    ordena(coluna) {
+        
+        console.log(`ATUAL : ${this._ordemAtual}, CLICADA : ${coluna}`);
+
+        if(this._ordemAtual == coluna) {
+
+            this._listaNegociacoes.inverterOrdem();
+        } else {
+            //Usamos a sintaxe objeto[nomePropriedade] para acessar a propriedade do objeto. 
+            //Essa forma mais verbosa é interessantíssima quando queremos acessar as propriedades de um objeto dinamicamente .
+            this._listaNegociacoes.ordena((a, b) => a[coluna] - b[coluna]);
+        }
+        
+        this._ordemAtual = coluna;
+    }
+
 
     apaga() {
 

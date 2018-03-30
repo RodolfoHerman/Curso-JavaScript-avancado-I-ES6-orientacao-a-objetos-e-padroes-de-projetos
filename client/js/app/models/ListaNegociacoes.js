@@ -29,6 +29,14 @@ class ListaNegociacoes {
         //this._armadilha.apply(this._contexto, [this]);
     }
 
+    inverterOrdem() {
+        this._negociacoes.reverse();
+    }
+
+    ordena(criterio) {
+        this._negociacoes.sort(criterio);
+    }
+
     get negociacoes() {
         //Programação defensiva
         return [].concat(this._negociacoes);
